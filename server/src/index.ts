@@ -12,9 +12,23 @@ const app = express();
 
 // ─── Security ─────────────────────────────────────────────────────────────────
 app.use(helmet());
+
+const allowedOrigins = [
+  config.clientUrl,
+  "https://financial-service-platform-yzyo.vercel.app",
+  "http://localhost:3000",
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: config.clientUrl,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, curl, etc.)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.some((allowed) => origin.startsWith(allowed))) {
+        return callback(null, true);
+      }
+      callback(null, false);
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -57,7 +71,7 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
-app.listen(config.port, () => {
+app.listen(config.port, "0.0.0.0", () => {
   console.log(`
 ╔═══════════════════════════════════════════╗
 ║   Aetheris Markets API                    ║

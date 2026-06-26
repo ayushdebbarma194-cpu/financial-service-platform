@@ -1,34 +1,21 @@
-FROM node:22-alpine AS base
-
-RUN npm install -g pnpm
+FROM node:22-alpine
 
 WORKDIR /app
 
-# Install dependencies
-COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install --frozen-lockfile || pnpm install
+# Copy package files
+COPY package.json package-lock.json ./
 
-# Copy prisma schema and generate client
+# Copy prisma schema (needed for postinstall generate)
 COPY prisma ./prisma
-RUN npx prisma generate
+
+# Install dependencies
+RUN npm install
 
 # Copy source code
 COPY . .
 
 # Build TypeScript
-RUN pnpm build
-
-# Production stage
-FROM node:22-alpine AS production
-
-RUN npm install -g pnpm
-
-WORKDIR /app
-
-COPY --from=base /app/dist ./dist
-COPY --from=base /app/node_modules ./node_modules
-COPY --from=base /app/package.json ./
-COPY --from=base /app/prisma ./prisma
+RUN npm run build
 
 EXPOSE 4000
 

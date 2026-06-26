@@ -170,3 +170,8 @@
     background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 30%, #EFF6FF 60%, #F8FAFC 100%);
   }
 }
+
+.dark .section-gradient-light,
+.dark .section-gradient-alt {
+  background: transparent !important;
+}

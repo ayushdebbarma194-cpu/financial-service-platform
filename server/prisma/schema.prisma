@@ -1,0 +1,153 @@
+// Aetheris Markets - Database Schema
+// Production: PostgreSQL | Dev: SQLite
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── USER ─────────────────────────────────────────────────────────────────────
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password      String
+  phone         String?
+  role          String   @default("USER")
+  avatarUrl     String?
+  referralCode  String   @unique
+  referredBy    String?
+  telegramId    String?
+  isVerified    Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  membership    Membership?
+  payments      Payment[]
+  refreshTokens RefreshToken[]
+  referrals     Referral[]     @relation("ReferrerRelation")
+  referredUsers Referral[]     @relation("ReferredRelation")
+
+  @@index([email])
+  @@index([referralCode])
+}
+
+// ─── MEMBERSHIP ───────────────────────────────────────────────────────────────
+
+model Membership {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  planId            String
+  status            String   @default("PENDING")
+  startDate         DateTime
+  endDate           DateTime
+  autoRenew         Boolean  @default(true)
+  telegramConnected Boolean  @default(false)
+  telegramInviteLink String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([endDate])
+}
+
+// ─── PAYMENT ──────────────────────────────────────────────────────────────────
+
+model Payment {
+  id              String   @id @default(uuid())
+  userId          String
+  orderId         String   @unique
+  paymentId       String?
+  invoiceNumber   String   @unique
+  amount          Int
+  currency        String   @default("INR")
+  planId          String
+  status          String   @default("PENDING")
+  method          String?
+  gatewayResponse String?
+  paidAt          DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([orderId])
+  @@index([status])
+}
+
+// ─── REFRESH TOKEN ────────────────────────────────────────────────────────────
+
+model RefreshToken {
+  id          String   @id @default(uuid())
+  userId      String
+  token       String   @unique
+  expiresAt   DateTime
+  isRevoked   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+// ─── ANNOUNCEMENT ─────────────────────────────────────────────────────────────
+
+model Announcement {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  type      String   @default("INFO")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+// ─── REFERRAL ─────────────────────────────────────────────────────────────────
+
+model Referral {
+  id            String   @id @default(uuid())
+  referrerId    String
+  referredId    String
+  status        String   @default("PENDING")
+  rewardAmount  Int?
+  completedAt   DateTime?
+  createdAt     DateTime @default(now())
+
+  referrer      User     @relation("ReferrerRelation", fields: [referrerId], references: [id])
+  referred      User     @relation("ReferredRelation", fields: [referredId], references: [id])
+
+  @@unique([referrerId, referredId])
+  @@index([referrerId])
+  @@index([referredId])
+}
+
+// ─── SUPPORT TICKET ───────────────────────────────────────────────────────────
+
+model SupportTicket {
+  id          String   @id @default(uuid())
+  userId      String
+  subject     String
+  message     String
+  status      String   @default("OPEN")
+  priority    String   @default("MEDIUM")
+  resolvedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}

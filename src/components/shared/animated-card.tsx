@@ -25,7 +25,7 @@ export function AnimatedCard({
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
       whileHover={hover ? { y: -4, transition: { duration: 0.2 } } : undefined}
       className={cn(
-        "rounded-2xl border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-md",
+        "rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:shadow-lg dark:shadow-none dark:hover:shadow-none light-depth-sm hover:light-depth dark:border-border",
         className
       )}
     >

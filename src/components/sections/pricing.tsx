@@ -26,10 +26,10 @@ export function PricingSection() {
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className={cn(
-              "relative rounded-2xl border p-6 lg:p-8 flex flex-col",
+              "relative rounded-2xl border p-6 lg:p-8 flex flex-col transition-all",
               plan.isPopular
-                ? "border-[#2563EB] bg-card shadow-xl shadow-[#2563EB]/10 scale-[1.02] md:scale-105"
-                : "border-border bg-card shadow-sm"
+                ? "border-[#2563EB] bg-card light-depth-lg dark:shadow-xl dark:shadow-[#2563EB]/10 scale-[1.02] md:scale-105"
+                : "border-border bg-card light-depth-sm dark:shadow-sm hover:light-depth dark:hover:shadow-md"
             )}
           >
             {/* Popular Badge */}

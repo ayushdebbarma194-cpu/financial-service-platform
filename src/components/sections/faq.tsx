@@ -12,7 +12,7 @@ import { FAQ_ITEMS } from "@/constants/faq";
 
 export function FAQSection() {
   return (
-    <SectionWrapper id="faq" className="bg-muted/30">
+    <SectionWrapper id="faq" className="section-gradient-alt dark:bg-transparent">
       <SectionHeading
         title="Frequently Asked Questions"
         subtitle="Everything you need to know about our service and membership."
@@ -23,7 +23,7 @@ export function FAQSection() {
           {FAQ_ITEMS.map((item, index) => (
             <AccordionItem
               key={index}
-              className="bg-card border border-border rounded-xl px-6 data-[open]:shadow-sm transition-shadow"
+              className="bg-card border border-border rounded-xl px-6 data-[open]:light-depth dark:data-[open]:shadow-sm light-depth-sm dark:shadow-none transition-all"
             >
               <AccordionTrigger className="text-left text-base font-medium text-foreground hover:no-underline py-5">
                 {item.question}

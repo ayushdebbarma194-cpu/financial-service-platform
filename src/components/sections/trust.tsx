@@ -53,7 +53,7 @@ const trustItems = [
 
 export function TrustSection() {
   return (
-    <SectionWrapper id="trust" className="bg-muted/30">
+    <SectionWrapper id="trust" className="section-gradient-light dark:bg-transparent">
       <SectionHeading
         title="Built on Trust & Transparency"
         subtitle="We believe in establishing credibility through action, not promises. Here's what sets us apart."

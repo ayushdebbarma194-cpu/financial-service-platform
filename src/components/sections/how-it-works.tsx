@@ -69,7 +69,7 @@ export function HowItWorksSection() {
                 }`}
               >
                 <div
-                  className={`inline-block p-6 rounded-2xl border border-border bg-card shadow-sm ${
+                  className={`inline-block p-6 rounded-2xl border border-border bg-card light-depth-sm dark:shadow-sm hover:light-depth dark:hover:shadow-md transition-all ${
                     index % 2 === 0 ? "md:ml-auto" : ""
                   }`}
                 >

@@ -2,18 +2,26 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/shared";
 import { loginSchema, type LoginFormData } from "@/lib/validations/auth";
+import { authApi } from "@/lib/auth-api";
+import { useAuthStore } from "@/lib/auth-store";
+import { ApiError } from "@/lib/api";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const setAuth = useAuthStore((s) => s.setAuth);
   const [showPassword, setShowPassword] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -23,9 +31,24 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    // Simulate login
-    console.log("Login:", data);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setServerError(null);
+    try {
+      const res = await authApi.login(data.email, data.password);
+      if (res.data) {
+        setAuth(
+          res.data.user,
+          res.data.tokens.accessToken,
+          res.data.tokens.refreshToken
+        );
+        router.push("/dashboard");
+      }
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setServerError(err.message);
+      } else {
+        setServerError("Something went wrong. Please try again.");
+      }
+    }
   };
 
   return (
@@ -70,6 +93,18 @@ export default function LoginPage() {
               Sign in to your account
             </p>
           </div>
+
+          {/* Server Error */}
+          {serverError && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-5 flex items-start gap-2 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3"
+            >
+              <AlertCircle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-destructive">{serverError}</p>
+            </motion.div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

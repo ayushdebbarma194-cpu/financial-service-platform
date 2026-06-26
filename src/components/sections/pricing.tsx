@@ -1,13 +1,41 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Check, Sparkles, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { PRICING_PLANS } from "@/constants/pricing";
 import { cn } from "@/lib/utils";
+
+function SwipeButton({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <motion.button
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className={cn(
+        "relative w-full py-4 rounded-xl font-medium text-sm overflow-hidden group cursor-pointer",
+        className
+      )}
+    >
+      {/* Swipe shine effect */}
+      <span className="absolute inset-0 overflow-hidden rounded-xl">
+        <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      </span>
+      {/* Button content */}
+      <span className="relative flex items-center justify-center gap-2">
+        {children}
+        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+      </span>
+    </motion.button>
+  );
+}
 
 export function PricingSection() {
   return (
@@ -82,17 +110,16 @@ export function PricingSection() {
               ))}
             </div>
 
-            {/* CTA */}
-            <Button
+            {/* CTA - Swipe Animation */}
+            <SwipeButton
               className={cn(
-                "w-full py-6 rounded-xl font-medium",
                 plan.isPopular
                   ? "bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-lg shadow-[#2563EB]/20"
                   : "bg-primary hover:bg-primary/90 text-primary-foreground"
               )}
             >
               Subscribe Now
-            </Button>
+            </SwipeButton>
           </motion.div>
         ))}
       </div>

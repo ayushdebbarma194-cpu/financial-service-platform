@@ -98,22 +98,39 @@ export function HeroSection() {
           className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <Link href="#membership">
-            <Button
-              size="lg"
-              className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-8 py-6 text-base font-medium rounded-xl shadow-xl shadow-[#2563EB]/25 hover:shadow-2xl hover:shadow-[#2563EB]/30 transition-all"
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
+              className="relative overflow-hidden rounded-xl group"
             >
-              View Membership
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+              <Button
+                size="lg"
+                className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-8 py-6 text-base font-medium rounded-xl shadow-xl shadow-[#2563EB]/25 hover:shadow-2xl hover:shadow-[#2563EB]/30 transition-all"
+              >
+                <span className="absolute inset-0 overflow-hidden rounded-xl">
+                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                </span>
+                <span className="relative flex items-center gap-2">
+                  View Membership
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
+              </Button>
+            </motion.div>
           </Link>
           <Link href="https://t.me/aetherismarkets" target="_blank">
-            <Button
-              variant="outline"
-              size="lg"
-              className="px-8 py-6 text-base font-medium rounded-xl border-border/80 shadow-sm hover:shadow-md hover:bg-white dark:hover:bg-white/5 transition-all"
+            <motion.div
+              whileHover={{ scale: 1.05, paddingLeft: 8, paddingRight: 8 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              Join Free Community
-            </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="px-8 py-6 text-base font-medium rounded-xl border-border/80 shadow-sm hover:shadow-md hover:bg-white dark:hover:bg-white/5 transition-all"
+              >
+                Join Free Community
+              </Button>
+            </motion.div>
           </Link>
         </motion.div>
 

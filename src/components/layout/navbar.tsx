@@ -52,12 +52,18 @@ export function Navbar() {
               </Button>
             </Link>
             <Link href="#membership">
-              <Button
-                size="sm"
-                className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white"
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                Get Started
-              </Button>
+                <Button
+                  size="sm"
+                  className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white"
+                >
+                  Get Started
+                </Button>
+              </motion.div>
             </Link>
           </div>
 
